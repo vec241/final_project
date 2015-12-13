@@ -58,7 +58,7 @@ def getTable(season, round, info_list):
     '''
     league_list = createList(season, round, info_list)
  
-    dtype = [('Team','S10'), ('Pts',int), ('W',int), ('D',int), ('L',int), ('GF',int), ('GA',int), ('GD',int)]
+    dtype = [('Team','S20'), ('Pts',int), ('W',int), ('D',int), ('L',int), ('GF',int), ('GA',int), ('GD',int)]
     league_array = np.array(league_list, dtype = dtype)
     ranked_list = np.sort(league_array, order=['Pts', 'GD', 'GF'])
     table = p.DataFrame(ranked_list)
