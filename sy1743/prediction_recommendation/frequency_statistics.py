@@ -93,7 +93,7 @@ class FrequencyStatistics():
         data_station_given = self.data[self.data['start station id'] == self.station_id]
         data_station_month = data_station_given[data_station_given['startmonth'] == self.month]
         data_station_day = data_station_month[data_station_month['startday'] == self.day]
-        freq_station_weight = data_station_day.shape[0]/len(data_station_day['startyear'].unique())
+        freq_station_weight = data_station_day.shape[0]/(max(1,len(data_station_day['startyear'].unique())))
         return freq_station_weight
 
     def _usage_station_given(self):
