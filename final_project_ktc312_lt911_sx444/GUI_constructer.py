@@ -503,13 +503,13 @@ class MoreWindow:
                                                             ).resize((400, 400), Image.ANTIALIAS))
             Label(self.f2, image=self.diff1_plot).pack()
         except:
-            Label(self.f3, text='No Need for ACF vs PACF difference 1').pack()
+            Label(self.f3, text='diff1 test is not needed since we already have the optimal d.').pack()
         try:
             self.diff2_plot = ImageTk.PhotoImage(Image.open('ACF_vs_PACF_diff2.jpg'
                                                             ).resize((400, 400), Image.ANTIALIAS))
             Label(self.f3, image=self.diff2_plot).pack()
         except:
-            Label(self.f3, text='No Need for ACF vs PACF difference 2').pack()
+            Label(self.f3, text='diff2 test is not needed since diff1 has already achieved the optimal d.').pack()
 
         # get the param_df and put it into the label, will appears under the notebook widget
         self.param_df = StringVar()
