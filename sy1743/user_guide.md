@@ -11,6 +11,7 @@
 $ git clone [git-repo-url]
 $ cd sy1743
 ```
+
 2. Set up memory of VirtualBox as 6GB
 
 3. download data from google drive, click [here](https://drive.google.com/drive/u/2/folders/0B1ADHcCkWGbad2prZDFxdnBLN3M)
@@ -91,7 +92,8 @@ $ python main.py
 3. What is the result for the program?
 - You can find some sample plots under the [sample_figures](sample_figures/) file.
 
-4. We also have pdf version for our user guide and basemap installation guide.
+4. What should we do, if we can not read the markdown file? 
+- We also have pdf version for our user guide and basemap installation guide.
 
 5. How to test the program?
 - You can run the test by enter
