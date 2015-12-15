@@ -106,9 +106,10 @@ class Master:
         self.start_date_pass = False
         self.end_date_pass = True
 
-    # Todo: add a loading window after click before result window is done
     def submit(self):
         # function of submit button, open new window when click
+        # No loading information when opening the new window,
+        # disable the submit button to prevent user open multiple windows
         global Entry_name
         global Start_date
         global End_date
@@ -248,13 +249,13 @@ class ResultWindow:
         # End_date = '2015-12-10'
 
         if not test_ticker(Entry_name):
-            print "can't get the data"
+            print "Can't get the data"
             tkMessageBox.showinfo(title='Feedback', message="Can't get the data")
             try:
                 self.master.destroy()
-            # Todo: this exception seems come from the Master window, how can we handel it?
             except TclError:
-                print 'TclError'
+                print 'TclError, Result window closed, however.'
+                pass
         else:
             self.analysis = Analysis(Start_date, End_date, Entry_name)
 
