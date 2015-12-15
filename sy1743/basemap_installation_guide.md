@@ -4,7 +4,7 @@ The below instructions are referenced from:              http://matplotlib.org/b
 ### step 1: Numpy, python and matplotlib
 Install numpy 1.0.0 or later, python 2.4 or later, matplotlib 1.0.0 or later. **If they are installed, go to step2**.
 ### step 2: Untar the file
-Untar the basemap-1.0.7.tar.gz file in the folder **resource**, and and cd to the **basemap-1.0.7** directory
+Untar the basemap-1.0.7.tar.gz file, and and cd to the **basemap-1.0.7** directory
 ### step 3: Install GEOS library
 **1 If you don’t have GEOS library on your system**, you can build it from the source code included with basemap by using following commands in the ubuntu command line:
 * cd to the geos-3.3.3 directory (it is under the directory basemap-1.0.7)
