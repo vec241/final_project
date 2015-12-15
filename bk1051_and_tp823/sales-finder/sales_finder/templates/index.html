@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+	<div class="well lg-10">
+		<h1>Welcome to SalesFinder!</h1>
+		<p>SalesFinder allows you to visualize residential property sales in New York City.</p>
+	</div>
+	<div class="well lg-6 center form-container">
+		{# Use the WTForms template provided to easily render the form object #}
+		{% import "bootstrap/wtf.html" as wtf %}
+		{{ wtf.quick_form(form) }}
+	</div>
+	{% if plots %}
+	<div class="well lg-10 center container">
+		<h3>Citywide Sales</h3>
+		{% for plot in plots %}
+			<div class="figure lg-4 md-6">{{ plot|safe }}</div>
+		{% endfor %}
+	</div>
+{% endif %}
+{% endblock main_content %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="well lg-10 center zipcode-results">
+{% if results %}
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<th></th>
+				{% for result in results %}
+					<th>{{ result['name'] }}</th>
+				{% endfor %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for key in results[0]['summary_stats'] %}
+				<tr><th>{{ key }}</th>
+					{% for result in results %}
+					<td>{{ result['summary_stats'][key] }}</td>
+					{% endfor %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endif %}
+
+{% if plots %}
+	<div class="container row">
+		{% for plot in plots %}
+			<div class="figure" style="float: left">{{ plot|safe }}</div>
+		{% endfor %}
+	</div>
+{% endif %}
+</div>
+
+<div class="well lg-10 center form-container">
+	{# Use the WTForms template provided to easily render the form object #}
+	{% import "bootstrap/wtf.html" as wtf %}
+	{{ wtf.quick_form(form) }}
+</div>
+{% endblock main_content %}
