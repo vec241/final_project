@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 def get_ticker_list():
     # get the all the ticker symbols from the csv file
+    # can update the ticker symbols by replacing this file
     df = pd.read_csv('Yahoo Ticker Symbols - Jan 2015.csv')
     ticker_list = df['Ticker'].drop_duplicates().values.tolist()
     return ticker_list
