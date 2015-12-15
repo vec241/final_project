@@ -11,7 +11,7 @@ import statistics as sr
 
 class Test_Mapper(TestCase):
     def setUp(self):
-        self.db = pd.read_csv('csv_for_test.csv')
+        self.db = pd.read_csv('./tests/csv_for_test.csv')
         self.valid_crime_coordinates_district_11 = zip(self.db.Latitude, self.db.Longitude)
 
         self.invalid_crime_coordinates_1 = 1.5
@@ -28,7 +28,7 @@ class Test_Mapper(TestCase):
         self.invalid_address_object1 = 1
         self.invalid_address_object2 = list()
 
-        self.valid_crimes_base = sr.CrimesDataFrame(pd.read_csv('csv_for_test.csv'))
+        self.valid_crimes_base = sr.CrimesDataFrame(pd.read_csv('./tests/csv_for_test.csv'))
         self.invalid_crimes_base = 1
 
         self.valid_crime_density_by_district_1 = {1: 1, 2: 4, 3: 9, 4: 16.3, 5: 25, 6: 36, 7: 49, 8: 64, 9: 81.788, 10: 100, 11: 121, 12: 144.323, 14: 196, 15: 225, 16: 256, 17: 289, 18: 324, 19: 361, 20: 3, 22: 0, 24: 600, 25: 625}
