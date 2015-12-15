@@ -496,22 +496,19 @@ class MoreWindow:
                                                           ).resize((400, 400), Image.ANTIALIAS))
             Label(self.f1, image=self.ACF_plot).pack()
         except:
-            print 'no ACF_vs_PACF.jpg'
-            Label(self.f3, text='No ACF vs PACF').pack()
+            Label(self.f3, text="Can't find the plot of ACF vs PACF").pack()
         try:
             self.diff1_plot = ImageTk.PhotoImage(Image.open('ACF_vs_PACF_diff1.jpg'
                                                             ).resize((400, 400), Image.ANTIALIAS))
             Label(self.f2, image=self.diff1_plot).pack()
         except:
-            print 'no ACF_vs_PACF_diff1.jpg'
-            Label(self.f3, text='No ACF vs PACF diff1').pack()
+            Label(self.f3, text='No Need for ACF vs PACF difference 1').pack()
         try:
             self.diff2_plot = ImageTk.PhotoImage(Image.open('ACF_vs_PACF_diff2.jpg'
                                                             ).resize((400, 400), Image.ANTIALIAS))
             Label(self.f3, image=self.diff2_plot).pack()
         except:
-            print 'no ACF_vs_PACF_diff2.jpg'
-            Label(self.f3, text='No ACF vs PACF diff2').pack()
+            Label(self.f3, text='No Need for ACF vs PACF difference 2').pack()
 
         # get the param_df and put it into the label, will appears under the notebook widget
         self.param_df = StringVar()
