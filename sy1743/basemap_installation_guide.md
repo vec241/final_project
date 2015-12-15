@@ -43,6 +43,8 @@ $ export GEOS_DIR=<the directory you want the libs and headers to go>
 ##Do not have space before and after the '=' symbol, a correct example is like this: export GEOS_DIR=/home/ds-ga-1007
 ##If any permission wrong happens, use sudo su to get the super user authority, or get root authority
 
+$ ./configure --prefix=$GEOS_DIR
+
 $ cd basemap-1.0.7
 #make sure you have super user authority 
 $ sudo su
