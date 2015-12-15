@@ -36,12 +36,12 @@ $ make; make install ## It may take a bit time, ignore the warnings if any
 2 cd back to the top level basemap directory (**basemap-1.0.7**) and run the usual **python setup.py install**. Check your installation by running **from mpl_toolkits.basemap import Basemap** at the python prompt.
 
  ```sh
-+$ cd geos-3.3.3
-+$ export GEOS_DIR=<the directory you want the libs and headers to go> 
-+##It is import to repeat this again! Otherwise the installation maigt fail
-+##I recommend to install it in your home directory, for example:/home/ds-ga-1007
-+##Do not have space before and after the '=' symbol, a correct example is like this: export GEOS_DIR=/home/ds-ga-1007
-+##If any permission wrong happens, use sudo su to get the super user authority, or get root authority
+$ cd geos-3.3.3
+$ export GEOS_DIR=<the directory you want the libs and headers to go> 
+##It is import to repeat this again! Otherwise the installation maigt fail
+##I recommend to install it in your home directory, for example:/home/ds-ga-1007
+##Do not have space before and after the '=' symbol, a correct example is like this: export GEOS_DIR=/home/ds-ga-1007
+##If any permission wrong happens, use sudo su to get the super user authority, or get root authority
 
 $ cd basemap-1.0.7
 #make sure you have super user authority 
