@@ -208,6 +208,7 @@ class Analysis:
 
 class InvalidParamError(Exception):
     def __str__(self):
+        # user exception when enter invalid input
         return 'Parameter only takes [0,1,2]'
 
 
