@@ -33,9 +33,11 @@ def get_data_and_dictionary_main_function():
         station_dictionary = gf.get_dictionary('data/station_dictionary.p')
         print 'Initialized!'
         print '===============================================================\n'
-    except:
+    except IOError:
         print 'IOERROR happens when reading the data, please make sure the datafile is downloaded and placed at the current directory.'
         sys.exit()
+    except KeyboardInterrupt:
+        print 'The program has been interrupted.'
 
     return data, station_dictionary
 
