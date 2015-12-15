@@ -1,0 +1,7 @@
+User Guide:
+This program requires the Basemap plugin of matplotlib, so follow the intructions online to install it if you run into problems.
+
+The program is run via a command line using "python finalProject.py"
+This will begin the prompt and it will clarify how to use the program accordingly.
+
+
