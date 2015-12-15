@@ -18,7 +18,7 @@ to download.
 
 4. move data file (**Citibike_final.csv** and **station_dictionary.p**) into our repo sy1743
 
-5. Install basemap package, see instruction basemap_installation_guide.md [here](sy1743/basemap_installation_guide.md)
+5. Install basemap package, see instruction basemap_installation_guide.md [here](basemap_installation_guide.md)
 
 
 ### Part 2 : Usage of the Application
@@ -86,10 +86,10 @@ $ python main.py
 - You can find it on google drive or follow the [link](https://drive.google.com/drive/u/2/folders/0B1ADHcCkWGbad2prZDFxdnBLN3M) from Part 1.
 
 2. How to install the basemap?
-- Please follow the instruction [here](sy1743/basemap_installation_guide.md)
+- Please follow the instruction [here](basemap_installation_guide.md)
 
 3. What is the result for the program?
-- You can find some sample plots under the [sample_figures](sy1743/sample_figures) file.
+- You can find some sample plots under the [sample_figures](sample_figures/) file.
 
 4. How to test the program?
 - You can run the test by enter
