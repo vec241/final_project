@@ -33,6 +33,7 @@ $ make; make install ## It may take a bit time, ignore the warnings if any
 
 ### step 4: Install basemap
 1 cd to the geos-3.3.3 again, export GEOS_DIR and do the configure again, it is very important!
+
 2 cd back to the top level basemap directory (**basemap-1.0.7**) and run the usual **python setup.py install**. Check your installation by running **from mpl_toolkits.basemap import Basemap** at the python prompt.
 
  ```sh
