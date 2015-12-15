@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from user_defined_exceptions import *
 import general_functions as gf
-import station_plot.mapplot
+import station_plot.mapplot as sm 
 import station_plot.freq_station as fs
 import plot_tool.plotting_tool as vs
 import prediction_recommendation.prediction_and_recommendation as pr
@@ -119,7 +119,7 @@ def station_freq_visualization_main_function(data):
                 print 'Show top 5 high frequency station:\n'
                 stat_list = fs.high_freq_station(loc_data, top_choice)
                 print stat_list
-                map_plot_obj = mapplot.MapPlot(loc_data,month,year)
+                map_plot_obj = sm.MapPlot(loc_data,month,year)
                 with warnings.catch_warnings():
                     warnings.simplefilter("ignore")
                     print '\n====> Generating frequency map...'
