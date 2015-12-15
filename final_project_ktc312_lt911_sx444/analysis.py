@@ -31,6 +31,9 @@ class Analysis:
         self.val = df['Price']
         self.start = self.ts.index[0]
         self.end = self.ts.index[-1]
+
+        # following Series are used for finding the optimal parameter d by comparing the acf's and
+        # pacf's for the timeseries at different diff stage.
         self.diff1_val = pd.Series(np.diff(self.val))
         self.diff1_val_na = pd.Series(np.concatenate(([np.nan], self.diff1_val.values)))
         self.diff2_val = pd.Series(np.diff(self.diff1_val_na))
@@ -40,12 +43,6 @@ class Analysis:
         '''function shows basic decriptive stats about the timeseries data, returns statistics in an array'''
         return self.df.describe().values
 
-    def orig_data_plot(self):
-        '''plot original timeseries plot'''
-        plt.plot(self.date, self.val)
-        plt.savefig('origianl time series data plot.jpg')
-        plt.clf()
-
     def d_param(self, diff):
         '''function takes different values for difference step, and returns true or false flag if acf and pacf values
         lie into the threshold area'''
@@ -53,7 +50,7 @@ class Analysis:
         if diff == 0:
             acf = tss.acf(self.val)
             pacf = tss.pacf(self.val)
-            # check save fig for acf and pacf plots
+            # acf and pacf plots
             fig = plt.figure(figsize = (12,8))
             ax1 = fig.add_subplot(121)
             fig = plot_acf(self.val,lags =40 ,ax=ax1)
@@ -61,7 +58,7 @@ class Analysis:
             fig= plot_pacf(self.val, lags = 40, ax =ax2)
             plt.savefig('ACF_vs_PACF.jpg')
             plt.close()
-            # check for optimal parameter d
+            # check if most acf and pacf are lie in the accepted region for diff0
             acf_percent = len(acf[np.abs(acf) <= THRESHOLD])/float(len(acf))
             pacf_percent = len(pacf[np.abs(pacf) <= THRESHOLD])/float(len(pacf))
             return (acf_percent >= .65) and (pacf_percent >= 0.65)
@@ -69,7 +66,7 @@ class Analysis:
         elif diff == 1:
             diff1_acf = tss.acf(self.diff1_val.dropna())
             diff1_pacf = tss.pacf(self.diff1_val.dropna())
-            # check save fig for acf and pacf plots
+            # for acf and pacf plots
             fig = plt.figure(figsize = (12,8))
             ax1 = fig.add_subplot(121)
             fig = plot_acf(self.diff1_val.dropna(),lags =40 ,ax=ax1)
@@ -77,6 +74,7 @@ class Analysis:
             fig= plot_pacf(self.diff1_val.dropna(), lags = 40, ax =ax2)
             plt.savefig('ACF_vs_PACF_diff1.jpg')
             plt.close()
+            # check if most acf and pacf are lie in the accepted region for diff1
             acf_percent = len(diff1_acf[np.abs(diff1_acf) <= THRESHOLD])/float(len(diff1_acf))
             pacf_percent = len(diff1_pacf[np.abs(diff1_pacf) <= THRESHOLD])/float(len(diff1_pacf))
             return (acf_percent >= .65) and (pacf_percent >= 0.65)
@@ -92,12 +90,13 @@ class Analysis:
             fig = plot_pacf(self.diff2_val.dropna(), lags = 40, ax =ax2)
             plt.savefig('ACF_vs_PACF_diff2.jpg')
             plt.close()
+            # check if most acf and pacf are lie in the accepted region for diff2
             acf_percent = len(diff2_acf[np.abs(diff2_acf) <= THRESHOLD])/float(len(diff2_acf))
             pacf_percent = len(diff2_pacf[np.abs(diff2_pacf) <= THRESHOLD])/float(len(diff2_pacf))
             return (acf_percent >= .65) and (pacf_percent >= 0.65)
 
         else:
-            print "d only takes [0,1,2]"
+            raise InvalidParamError
 
     def d_determination(self):
         '''fuction which determines the value for d (distancing)'''
@@ -125,6 +124,9 @@ class Analysis:
             df_new =pd.DataFrame(dic)
             ts = df_new.set_index('Date')
         arima_mod_aics = {}
+
+        # create a nested loop for getting parameters p and q into account. return the parameters in
+        # a right order of (p, d, q) when achieves the minimun aic.
         for p in range(3):
             for q in range(3):
                 try:
@@ -172,28 +174,41 @@ class Analysis:
 
     def predict_plot(self):
         '''generate prediction plot'''
-        # frames = [self.ts, self.predict_val]
-        # result = pd.concate(frames)
         pred_df =  self.predict_val()
-        pred_df.ix[self.end] = self.val[len(self.df)-1]
-        pred_df = pred_df.sort_index(ascending = True)
         pred_time = pred_df.index
         pred_vals = pred_df['Price']
-        fig = plt.figure()
+
+        fig = plt.figure(figsize = (12, 8))
         ax1 = fig.add_subplot(211)
         ax1.plot(self.date, self.val, '-b', label = 'original data')
         ax1.plot(pred_time, pred_vals, '-r', label = 'predicted values')
+        ax1.annotate("Forecast",
+            xy=(pred_time[0], pred_vals[0]), xycoords='data',
+            xytext=(pred_time[-1] + timedelta(1), pred_vals[0]+2), textcoords='data',
+            arrowprops=dict(arrowstyle="->",
+                            connectionstyle="arc3"),
+            )
         ax1.set_title('Full plot')
+        plt.legend(loc = 'upper left',fancybox = True)
 
         base = self.ts.index[-60]
         ax2 = fig.add_subplot(212)
         ax2.plot(self.ts.index[-60:], self.ts.Price[-60:], '-b', label = 'original data')
-        # ax2.plot(self.date, self.val, '-b', label = 'original data')
         ax2.plot(pred_time, pred_vals,'+r',label = 'predicted values' )
-        # ax2.xticks([base + timedelta(days = x) for x in range(0, 90, 10)], rotation = 90)
+        plt.xticks(rotation = 45)
+        ax2.annotate("Forecast",
+            xy=(pred_time[0], pred_vals[0]), xycoords='data',
+            xytext=(pred_time[-1] + timedelta(1), pred_vals[0]+2), textcoords='data',
+            arrowprops=dict(arrowstyle="fancy",
+                            connectionstyle="arc3"),
+            )
         ax2.set_title('Close-up plot')
+        plt.legend(loc = 'upper left',fancybox = True)
         plt.savefig('Predicted_plots.jpg')
 
+class InvalidParamError(Exception):
+    def __str__(self):
+        return 'Parameter only takes [0,1,2]'
 
 
 
