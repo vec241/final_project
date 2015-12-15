@@ -65,6 +65,7 @@ $ python main.py
   - Enter an integer from 1 to 12 as month.
 - Enter back: go back to main menu.
 - Enter quit: exit the program.
+- Note: close one plot will show the next plot
 
 ###### Option 2: Station frequency visualization
 - Input year and month between 2013/7 and 2015/10:
@@ -72,6 +73,7 @@ $ python main.py
   - Enter an integer from 1 to 12 as month.
 - Enter back: go back to main menu.
 - Enter quit: exit the program.
+- Note: close one plot will show the next plot.
 
 ###### Option 3: Prediction and recommendation
 
