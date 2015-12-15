@@ -58,18 +58,19 @@ class FrequencyStatistics():
                 raise InputDayOutRange
             else:
                 self.day = int(day)
-            self.month = int(month)
+                self.month = int(month)
         elif int(month) in MONTH_30DAYS:  # For month which has 30 days. 
             if int(day) < 1 or int(day) > 30:
                 raise InputDayOutRange
             else:
                 self.day = int(day)
-            self.month = int(month)
+                self.month = int(month)
         elif int(month) in MONTH_FEB:
             if int(day) < 1 or int(day) > 28:
                 raise InputDayOutRange
             else:
                 self.day = int(day)
+                self.month = int(month)
         else:
             raise InputMonthOutRange
 
