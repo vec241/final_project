@@ -39,16 +39,16 @@ $ make; make install ## It may take a bit time, ignore the warnings if any
  ```sh
 $ cd geos-3.3.3
 $ export GEOS_DIR=<the directory you want the libs and headers to go> 
-##It is import to repeat this again! Otherwise the installation maigt fail
+##It is important to repeat this again! Otherwise the installation maigt fail
 ##I recommend to install it in your home directory, for example:/home/ds-ga-1007
 ##Do not have space before and after the '=' symbol, a correct example is like this: export GEOS_DIR=/home/ds-ga-1007
-##If any permission wrong happens, use sudo su to get the super user authority, or get root authority
+
 
 $ ./configure --prefix=$GEOS_DIR
 
 $ cd basemap-1.0.7
-#make sure you have super user authority 
-$ sudo su
+
+
 $ python setup.py install
 
 ##Check whether you have installed successfully
