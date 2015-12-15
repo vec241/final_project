@@ -97,5 +97,7 @@ $ python main.py
 $ python test.py
 ```
 
+5. We also have pdf version for our user guide and basemap installation guide.
+
 ### Acknowledgement
 - Data resource from citibike website
