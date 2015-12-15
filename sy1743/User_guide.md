@@ -7,7 +7,7 @@
 
 ### Part 1: Environment Setup
 1. run the following commands to download our projects
-```
+``` sh
 $ git clone [git-repo-url]
 $ cd sy1743
 ```
@@ -46,7 +46,7 @@ to download.
 
 In terminal, enter the command to run the program:
 
-```
+``` sh
 $ cd sy1743
 $ python main.py
 ```
@@ -91,13 +91,14 @@ $ python main.py
 3. What is the result for the program?
 - You can find some sample plots under the [sample_figures](sample_figures/) file.
 
-4. How to test the program?
+4. We also have pdf version for our user guide and basemap installation guide.
+
+5. How to test the program?
 - You can run the test by enter
 ```
 $ python test.py
 ```
 
-5. We also have pdf version for our user guide and basemap installation guide.
 
 ### Acknowledgement
 - Data resource from citibike website
