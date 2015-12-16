@@ -1,0 +1,507 @@
+{% extends "index.html" %}
+
+{% block title %}Pick Ups Analyzer{% endblock %}
+
+{% load staticfiles %}
+{% block additional_css %}
+    <style>
+        #all_points_map {
+            width: 100%;
+            height: 600px;
+            float: left;
+        }
+
+        #clusters_map {
+            width: 100%;
+            height: 600px;
+            float: left;
+        }
+
+        #infoPanel div {
+            margin-bottom: 5px;
+        }
+        #chart_div{
+            height: 400px;
+        }
+
+        #amount_pie_chart{
+            height: 300px;
+        }
+
+        #payment_pie_chart{
+            height: 300px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+
+
+        <section class="content-header">
+            <h1>Pick Ups</h1>
+            <small>Summary Statistics</small>
+        </section>
+        <section class="content">
+            <form action="." method="post">
+
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Pick Up Date</h3>
+                        </div><!-- /.box-header -->
+                            {% csrf_token %}
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label for="pickup_date" class="col-sm-2 control-label">Date:</label>
+
+                                  <div class="col-sm-10">
+                                    <input data-provide="datepicker" class="form-control" id="pickup_date" name="pickup_date" value="{{ original_date }}">
+                                  </div>
+                                </div>
+                            </div><!-- /.box-body -->
+
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-primary pull-right">Get Information</button>
+                            </div>
+                    </div>
+                    {% if error %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger alert-dismissable ">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            {% if number_dropoffs %}
+                                <h3>{{ number_dropoffs }}</h3>
+                            {% else %}
+                                <h3>-</h3>
+                            {% endif %}
+                            <p>Total of Drop Offs</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                    </div>
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Pick Up Location</h3>
+                        </div><!-- /.box-header -->
+                        <div class="box-body">
+
+                            <strong><i class="fa fa-map-marker margin-r-5"></i>Current Position</strong>
+                            <p class="text-muted" id="info"></p>
+
+                            <hr>
+
+                            <strong><i class="fa fa-map-marker margin-r-5"></i>Approximate Address</strong>
+                            <p class="text-muted" id="address"></p>
+                        </div><!-- /.box-body -->
+                    </div>
+                    <div id="coordinates">
+                        <input type="hidden" id="pick_up_lat" name="pick_up_lat">
+                        <input type="hidden" id="pick_up_lon" name="pick_up_lon">
+                    </div>
+                    {% if results_flag %}
+                    <div>
+                        <a class="btn btn-app" href="{% url 'get_pdf' %}" target="_blank">
+                            <i class="fa fa-save"></i> Get Report
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Pick Ups Map</h3>
+                                <div class="box-tools pull-right">
+                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="box-body" style="display: block;">
+                                <div id="all_points_map"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if results_flag %}
+                        <div class="row">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Drop Offs Top 20 Destinations</h3>
+                                    <div class="box-tools pull-right">
+                                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <div class="box-body" style="display: block;">
+                                    <div id="clusters_map">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Pick Ups Distribution</h3>
+                                    <div class="box-tools pull-right">
+                                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <div class="box-body" style="display: block;">
+                                    <div id="chart_div">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="box box-primary">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Pick Ups Rate Summary</h3>
+                                        <div class="box-tools pull-right">
+                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body" style="display: block;">
+                                        <table class="table table-bordered">
+                                            <tbody><tr>
+                                                <th>Statistic</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                            {% for stats_name, stats_value in rate_summary.items %}
+                                                <tr>
+                                                    <td>{{ stats_name }}</td>
+                                                    <td>$ {{ stats_value }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box box-primary col-md-6">
+
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Pick Ups Distance Summary</h3>
+                                        <div class="box-tools pull-right">
+                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body" style="display: block;">
+                                        <table class="table table-bordered">
+                                            <tbody><tr>
+                                                <th>Statistic</th>
+                                                <th>Distance (In Miles)</th>
+                                            </tr>
+                                            {% for stats_name, stats_value in distance_summary.items %}
+                                                <tr>
+                                                    <td>{{ stats_name }}</td>
+                                                    <td>{{ stats_value }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="box box-primary col-md-6">
+
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Fare Amounts Chart</h3>
+                                        <div class="box-tools pull-right">
+                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body" style="display: block;">
+                                        <div id="amount_pie_chart">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box box-primary col-md-6">
+
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Payment Type Chart</h3>
+                                        <div class="box-tools pull-right">
+                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body" style="display: block;">
+                                        <div id="payment_pie_chart">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            </form>
+        </section>
+
+{% endblock %}
+
+{% block additional_js %}
+
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=visualization"></script>
+    <script type="text/javascript">
+        var geocoder = new google.maps.Geocoder();
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function geocodePosition(pos) {
+            geocoder.geocode({
+                latLng: pos
+            }, function(responses) {
+                if (responses && responses.length > 0) {
+                    updateMarkerAddress(responses[0].formatted_address);
+                } else {
+                    updateMarkerAddress('Cannot determine address at this location.');
+                }
+            });
+        }
+
+        function updateMarkerPosition(latLng) {
+            $('#pick_up_lat').val(latLng.lat());
+            $('#pick_up_lon').val(latLng.lng());
+            document.getElementById('info').innerHTML = [
+                latLng.lat(),
+                latLng.lng()
+            ].join(', ');
+
+        }
+
+        function updateMarkerAddress(str) {
+            document.getElementById('address').innerHTML = str;
+        }
+
+        var map, clusters_map;
+
+        function initialize() {
+            var latLng = new google.maps.LatLng({{ current_lat }}, {{ current_long }});
+
+            var myOptions = {
+                zoom: 12,
+                center: latLng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            map = new google.maps.Map(document.getElementById("all_points_map"), myOptions);
+
+            {% if results_flag %}
+            clusters_map = new google.maps.Map(document.getElementById("clusters_map"), myOptions);
+            {% endif %}
+
+
+            var marker = new google.maps.Marker({
+                position: latLng,
+                title: 'Pick Up Place',
+                map: map,
+                draggable: true
+            });
+
+            // Add circle overlay and bind to marker
+            var circle = new google.maps.Circle({
+                map: map,
+                radius: 100,    // 10 miles in metres
+                fillColor: '#AA0000',
+                strokeWeight: 0
+            });
+            circle.bindTo('center', marker, 'position');
+
+            // Update current position info.
+            updateMarkerPosition(latLng);
+            geocodePosition(latLng);
+
+            // Add dragging event listeners.
+            google.maps.event.addListener(marker, 'dragstart', function() {
+                updateMarkerAddress('Dragging...');
+            });
+
+            google.maps.event.addListener(marker, 'drag', function() {
+                updateMarkerPosition(marker.getPosition());
+            });
+
+            google.maps.event.addListener(marker, 'dragend', function() {
+                geocodePosition(marker.getPosition());
+            });
+
+            var marker_locations = [
+                {% if drop_offs %}
+                    {% for do in drop_offs %}
+                        [{{ do.0 }}, {{ do.1 }}],
+                    {% endfor %}
+                {% endif %}
+            ];
+
+            var heatmapData = [
+                {% if drop_offs %}
+                    {% for do in drop_offs %}
+                        new google.maps.LatLng({{ do.0 }}, {{ do.1 }}),
+                    {% endfor %}
+                {% endif %}
+            ];
+
+            var markers = [];
+
+            for (i = 0; i < marker_locations.length; i++) {
+                doff_marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(marker_locations[i][0], marker_locations[i][1]),
+                    map: map
+                });
+                markers.push(doff_marker);
+
+                /*
+                 google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                 return function() {
+                 infowindow.setContent(locations[i][0]);
+                 infowindow.open(map, marker);
+                 }
+                 })(marker, i));*/
+            }
+
+            /*var heatmap = new google.maps.visualization.HeatmapLayer({
+                data: heatmapData,
+                map: map,
+                opacity:.9,
+                dissipating: true,
+                radius: 1
+            });*/
+
+
+            var mc = new MarkerClusterer(map, markers);
+
+            //These are the cluster points
+            {% if cluster_list %}
+                {% for cl in cluster_list %}
+                    doff_marker = new google.maps.Marker({
+                        position: new google.maps.LatLng({{ cl.0 }}, {{ cl.1 }}),
+                        map: clusters_map
+                    });
+
+                    var color = getRandomColor();
+
+                    var df_circle = new google.maps.Circle({
+                        map: clusters_map,
+                        radius: {{ cl.2 }},
+                        fillColor: color,
+                        strokeWeight: 0
+                    });
+
+                    df_circle.bindTo('center', doff_marker, 'position');
+
+                {% endfor %}
+            {% endif %}
+
+        }
+
+        // Onload handler to fire off the app.
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    {% if results_flag %}
+    <script type="text/javascript">
+        google.load('visualization', '1', {packages: ['corechart']});
+        google.setOnLoadCallback(drawBasic);
+
+
+        function drawBasic() {
+
+            var data = new google.visualization.DataTable(
+
+            );
+            data.addColumn('string', 'Time of Day');
+            data.addColumn('number', 'No. of Pick Ups');
+
+            data.addRows([
+                {% for hour, no_pickups in pickup_distribution.items %}
+                    ['{{ hour }}', {{ no_pickups }}],
+                {% endfor %}
+            ]);
+
+            var options = {
+                title: 'Pick Up Distribution Throughout the Day',
+
+            };
+
+            var chart = new google.visualization.ColumnChart(
+                    document.getElementById('chart_div'));
+
+            chart.draw(data, options);
+
+            // Amount Pie Chart
+
+            var fare_amount_data = google.visualization.arrayToDataTable([
+              ['Thing', 'Amount'],
+                {% for key, value in fare_amounts.items %}
+                    ['{{ key }}', {{ value }}],
+                {% endfor %}
+            ]);
+
+            var fare_amounts_options = {
+              is3D: true,
+            };
+
+            var pie_chart = new google.visualization.PieChart(document.getElementById('amount_pie_chart'));
+            pie_chart.draw(fare_amount_data, fare_amounts_options);
+
+            // Payment Type Pie Chart
+
+            var payment_type_data = google.visualization.arrayToDataTable([
+              ['Thing', 'Amount'],
+                {% for key, value in payment_types.items %}
+                    ['{{ key }}', {{ value }}],
+                {% endfor %}
+            ]);
+
+            var payment_type_options = {
+              is3D: true,
+            };
+
+            var payment_chart = new google.visualization.PieChart(document.getElementById('payment_pie_chart'));
+            payment_chart.draw(payment_type_data, payment_type_options);
+
+
+        }
+
+    </script>
+
+    {% endif %}
+
+
+{% endblock %}
