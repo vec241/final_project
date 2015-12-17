@@ -1,0 +1,7 @@
+Please follow this user guide when running the program.
+
+1. Download everything in the folder 'jj1745'. Make sure you have the data folder saved.
+
+2. Run 'football.py' from the command line.
+
+Please follow the in-program instructions. Thanks!
