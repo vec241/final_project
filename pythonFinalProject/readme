@@ -1,0 +1,9 @@
+User Guide:
+This program requires the Basemap plugin of matplotlib, so follow the intructions online to install it if you run into problems.
+
+The program is run via a command line using "python finalProject.py"
+This will begin the prompt and it will clarify how to use the program accordingly.
+
+While originally this project was proposed to be done within a web app, it became clear that not only would this be outside the project scope, it would also require a myriad of other things to be able to attain what has been done just in this program. This does speak to it's maintainability and possibility for growth though. The code has been structured so that going forward if the front end(interactionWithUser.py) were implemented to take in input differently, it could still use the same processing calls from recruitingData.py
+
+
